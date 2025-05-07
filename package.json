@@ -1,0 +1,22 @@
+{
+    "name": "ai-diet-backend",
+    "version": "1.0.0",
+    "main": "src/index.js",
+    "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+    },
+    "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.0.3",
+    "mongodb": "^5.1.0",
+    "mongoose": "^7.2.1",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
+    "openai": "^4.2.1",
+    "cors": "^2.8.5"
+    },
+    "devDependencies": {
+    "nodemon": "^2.0.22"
+    }
+    }
