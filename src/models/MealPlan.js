@@ -1,22 +1,9 @@
 import mongoose from 'mongoose';
 
-// Schema for individual meal details (e.g., breakfast, lunch)
-const mealItemSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    recipe: { type: String },
-    nutritionalFacts: { type: String }
-}, { _id: false }); // _id: false if you don't need separate IDs for each meal item
-
+// In MealPlan.js
 const dailyMealSchema = new mongoose.Schema({
     dayOfWeek: String,
-    // Changed 'mealsDetails: [String]' to a structured 'meals' object
-    meals: {
-        breakfast: mealItemSchema,
-        lunch: mealItemSchema,
-        supper: mealItemSchema,
-        // You could add other optional meal types like snacks here
-        // snacks: mealItemSchema 
-    }
+    mealsDetails: [String] // Or an array of meal objects like {name: String, description: String}
 });
 
 const mealPlanSchema = new mongoose.Schema({
@@ -24,4 +11,6 @@ const mealPlanSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
     meals: [dailyMealSchema] // Now an array of specific sub-documents
 });
- export default mongoose.model('MealPlan', mealPlanSchema);
+
+
+export default mongoose.model('MealPlan', mealPlanSchema);
