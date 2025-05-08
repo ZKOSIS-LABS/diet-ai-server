@@ -39,15 +39,31 @@ export async function generatePlan(req, res) {
     try {
       mealPlanContent = JSON.parse(messageContent);
 
-      if (!Array.isArray(mealPlanContent) || mealPlanContent.some(day => !day.dayOfWeek || !Array.isArray(day.mealsDetails) || day.mealsDetails.length === 0)) {
+      // Validate the structure of the parsed JSON
+      if (
+        !Array.isArray(mealPlanContent) ||
+        mealPlanContent.some(day => !day.dayOfWeek || !Array.isArray(day.mealsDetails) || day.mealsDetails.length === 0)
+      ) {
         throw new Error('Invalid meal plan structure.');
       }
+
+      // Add fallback for missing or invalid dayOfWeek
+      mealPlanContent = mealPlanContent.map((day, index) => ({
+        dayOfWeek: day.dayOfWeek || `Day ${index + 1}`,
+        mealsDetails: day.mealsDetails || []
+      }));
     } catch (parseError) {
       console.error('Failed to parse OpenAI response as JSON:', parseError);
-      mealPlanContent = [{
-        dayOfWeek: "Error",
-        mealsDetails: ["Failed to parse structured meal details from AI. Raw response: " + (messageContent ? messageContent.substring(0, 200) : "N/A") + "..."]
-      }];
+      mealPlanContent = [
+        {
+          dayOfWeek: "Error",
+          mealsDetails: [
+            `Failed to parse structured meal details from AI. Raw response: ${
+              messageContent ? messageContent.substring(0, 200) : "N/A"
+            }...`
+          ]
+        }
+      ];
     }
 
     const plan = await MealPlan.create({ user: userId, meals: mealPlanContent });
