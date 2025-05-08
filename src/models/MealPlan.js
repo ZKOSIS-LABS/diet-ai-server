@@ -2,15 +2,18 @@ import mongoose from 'mongoose';
 
 // In MealPlan.js
 const dailyMealSchema = new mongoose.Schema({
-    dayOfWeek: String,
-    mealsDetails: [String] // Or an array of meal objects like {name: String, description: String}
+    dayOfWeek: { type: String, required: true }, // e.g., "Monday"
+    mealsDetails: {
+        breakfast: { type: String, required: true }, // e.g., "Oatmeal with berries and nuts"
+        lunch: { type: String, required: true },     // e.g., "Quinoa salad with chickpeas"
+        supper: { type: String, required: true }     // e.g., "Grilled salmon with asparagus"
+    }
 });
 
 const mealPlanSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     createdAt: { type: Date, default: Date.now },
-    meals: [dailyMealSchema] // Now an array of specific sub-documents
+    meals: dailyMealSchema // Now a single object for one day instead of an array
 });
-
 
 export default mongoose.model('MealPlan', mealPlanSchema);
